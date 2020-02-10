@@ -13,4 +13,4 @@
 .externalNativeBuild
 .cxx
 app/google-services.json
-/test.txt
+app/test.txt
