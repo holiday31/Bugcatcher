@@ -1,5 +1,7 @@
 package net.skhu.bugcatcher;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,6 +33,10 @@ public class MainActivity extends AppCompatActivity {
     private String email = "";
     private String password = "";
 
+    public static final String MyPREFERENCES = "Session" ;
+    SharedPreferences sharedpreferences;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +47,17 @@ public class MainActivity extends AppCompatActivity {
 
         editTextEmail = findViewById(R.id.et_eamil);
         editTextPassword = findViewById(R.id.et_password);
+        sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+
+        //SharedPreferences prefs = getPreferences(this);
+        String value =sharedpreferences.getString("email",null);
+        if(!value.isEmpty()){
+            //Toast.makeText(MainActivity.this, email, Toast.LENGTH_SHORT).show();
+            Intent applyIntent=new Intent(this, BugApplyActivity.class);
+            startActivity(applyIntent);
+        }
+
+
     }
 
     public void singUp(View view) {
@@ -94,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     // 로그인
-    private void loginUser(String email, String password)
+    private void loginUser(final String email, String password)
     {
         firebaseAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -103,6 +120,11 @@ public class MainActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // 로그인 성공
                             Toast.makeText(MainActivity.this, R.string.success_login, Toast.LENGTH_SHORT).show();
+                            SharedPreferences.Editor editor = sharedpreferences.edit();
+                            editor.putString("email", email);
+                            editor.commit();
+                            Intent applyIntent=new Intent(MainActivity.this, BugApplyActivity.class);
+                            startActivity(applyIntent);
                         } else {
                             // 로그인 실패
                             Toast.makeText(MainActivity.this, R.string.failed_login, Toast.LENGTH_SHORT).show();
