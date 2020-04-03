@@ -181,14 +181,6 @@ public class SignupActivity extends AppCompatActivity {
 
     }
 
-    public void setIdCheck(View view) {
-
-
-    }
-
-    public void setPhoneCheck(View view) {
-
-    }
 
 
 

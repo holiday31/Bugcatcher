@@ -25,4 +25,16 @@
     <string name="id_check_fail">이미 사용 중인 아이디입니다.</string>
     <string name="phone_check_success">사용할 수 있는 휴대폰 번호입니다.</string>
     <string name="phone_check_fail">이미 등록된 휴대폰 번호입니다.</string>
-    </resources>
+    <string name="apply_title">바선생 수배하기</string>
+    <string name="apply_content">수배내용</string>
+    <string name="apply_content_placeholder">바선생에 대한 특이사항</string>
+    <string name="apply_reward_text">사례</string>
+    <string name="apply_reward_placeholder">기프티콘, 현금 등에 관해 구체적으로 입력</string>
+    <string name="apply_detail">바선생에 대한 구체적인 정보</string>
+    <string name="bug_size">벌레 크기</string>
+    <string name="big_size">대</string>
+    <string name="middle_size">중</string>
+    <string name="small_size">소</string>
+    <string name="apply_submit">수배하기</string>
+
+</resources>
