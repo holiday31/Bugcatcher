@@ -1,8 +1,11 @@
 package net.skhu.bugcatcher;
+
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
@@ -52,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
             createUser(email, password);
         }
          */
-        Intent signUpIntent=new Intent(this, SignupActivity.class);
+        Intent signUpIntent = new Intent(this, SignupActivity.class);
         startActivity(signUpIntent);
     }
 
@@ -60,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
         email = editTextEmail.getText().toString();
         password = editTextPassword.getText().toString();
 
-        if(isValidEmail() && isValidPasswd()) {
+        if (isValidEmail() && isValidPasswd()) {
             loginUser(email, password);
         }
     }
@@ -92,10 +95,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
     // 로그인
-    private void loginUser(String email, String password)
-    {
+    private void loginUser(String email, String password) {
         firebaseAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -103,6 +104,9 @@ public class MainActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // 로그인 성공
                             Toast.makeText(MainActivity.this, R.string.success_login, Toast.LENGTH_SHORT).show();
+
+                            Intent mainMapIntent = new Intent(getApplicationContext(), MainMapActivity.class);
+                            startActivity(mainMapIntent);
                         } else {
                             // 로그인 실패
                             Toast.makeText(MainActivity.this, R.string.failed_login, Toast.LENGTH_SHORT).show();

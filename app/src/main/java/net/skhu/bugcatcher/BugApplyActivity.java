@@ -68,10 +68,10 @@ public class BugApplyActivity extends AppCompatActivity {
 
 
     //신고내용 저장
-    private void saveApply(String email,String content, String reward, String size) {
-        UserInfo user = new UserInfo(email,name,phone,sex);
-        Apply
-        ref.child("users").child(phone).setValue(user);
-    }
+//    private void saveApply(String email,String content, String reward, String size) {
+//        UserInfo user = new UserInfo(email,name,phone,sex);
+//        Apply
+//        ref.child("users").child(phone).setValue(user);
+//    }
 
 }

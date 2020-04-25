@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_progress"
+            android:icon="@drawable/ic_hourglass_empty_black_24dp"
+            android:title="@string/nav_progress_title" />
+        <item
+            android:id="@+id/nav_log"
+            android:icon="@drawable/ic_history_black_24dp"
+            android:title="@string/nav_log_title" />
+        <item
+            android:id="@+id/nav_mypage"
+            android:icon="@drawable/ic_person_black_24dp"
+            android:title="@string/nav_mypage_title" />
+        <item
+            android:id="@+id/nav_setting"
+            android:icon="@drawable/ic_settings_black_24dp"
+            android:title="@string/nav_setting_title" />
+        <item
+            android:id="@+id/nav_logout"
+            android:icon="@drawable/ic_exit_to_app_black_24dp"
+            android:title="@string/nav_logout_title" />
+    </group>
+</menu>
