@@ -13,8 +13,7 @@
 
 
     <string name="success_login">로그인 성공</string>
-    <string name="failed_login">로그인 실패</string>
-
+    <string name="failed_login">아이디 또는 비밀번호가 올바르지 않습니다.</string>
     <string name="success_signup">회원가입 성공</string>
     <string name="failed_signup">회원가입 실패</string>
     <string name="name">이름</string>
@@ -36,5 +35,15 @@
     <string name="middle_size">중</string>
     <string name="small_size">소</string>
     <string name="apply_submit">수배하기</string>
+    <string name="title_activity_catcher_list">CatcherListActivity</string>
+    <string-array name="rewards">
+        <item>5천원 이내</item>
+        <item>5천원-1만원</item>
+        <item>1만원-1만5천원</item>
+        <item>1만5천원-2만원</item>
+    </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

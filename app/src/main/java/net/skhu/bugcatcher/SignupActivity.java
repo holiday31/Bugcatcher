@@ -116,8 +116,7 @@ public class SignupActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         ref.child("users").addValueEventListener(new ValueEventListener() {
-                            //전화번호 중복확인 완료 후 전화번호 바꿀 시 중복확인 통과 오류 고치기
-                            //새로 창을 띄워서 그안에서 아이디 중복확인을 해야할 것 같다.
+
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 boolean hasPhone=false;

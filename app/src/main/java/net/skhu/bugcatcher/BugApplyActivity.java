@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.view.View;
+import android.widget.Spinner;
 import android.widget.Toast;
 import java.text.SimpleDateFormat;
 
@@ -26,12 +27,14 @@ public class BugApplyActivity extends AppCompatActivity {
     private EditText inputReward;
     private RadioGroup sizeGroup;
     private RadioButton big, middle, small;
+    private Spinner spinner;
     String errorMessage = "";
     private String content;
     private String reward;
     private String email;
     private String size;
-
+    private int rewardIndex;
+    private int maxreward;
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference ref = firebaseDatabase.getReference();
 
@@ -48,6 +51,9 @@ public class BugApplyActivity extends AppCompatActivity {
         big = (RadioButton) findViewById(R.id.bigBtn);
         middle = (RadioButton) findViewById(R.id.middleBtn);
         small = (RadioButton) findViewById(R.id.smallBtn);
+        spinner = (Spinner) findViewById(R.id.spinner);
+        rewardIndex = spinner.getSelectedItemPosition();
+
 
     }
 
@@ -62,8 +68,14 @@ public class BugApplyActivity extends AppCompatActivity {
             case R.id.middleBtn:size="중"; break;
             case R.id.smallBtn:size="소"; break;
         }
+        switch (rewardIndex) {
+            case 0: maxreward=5000; break;
+            case 1: maxreward=10000; break;
+            case 2: maxreward=15000; break;
+            case 3: maxreward=20000; break;
+        }
         if (isValidInfo()) {
-            saveApply(email,content,reward,size);
+            saveApply(email,content,reward,size,maxreward);
         }
         else{
             Toast.makeText(BugApplyActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
@@ -90,13 +102,15 @@ public class BugApplyActivity extends AppCompatActivity {
 
 
     //신고내용 저장
-    private void saveApply(String email,String content, String reward, String size) {
-        Apply apply= new Apply(email,content,reward,size);
+    private void saveApply(String email,String content, String reward, String size,int maxreward) {
+        Apply apply= new Apply(email,content,reward,size,maxreward);
         Calendar c=Calendar.getInstance();
         SimpleDateFormat sdf=new SimpleDateFormat("yyyyMMddhhmmss");
         String current=sdf.format(c.getTime());
         ref.child("apply").child(current).setValue(apply);
         Toast.makeText(BugApplyActivity.this, "수배 성공", Toast.LENGTH_SHORT).show();
+        Intent applyIntent=new Intent(BugApplyActivity.this, CatcherListActivity.class);
+        startActivity(applyIntent);
     }
 
 }

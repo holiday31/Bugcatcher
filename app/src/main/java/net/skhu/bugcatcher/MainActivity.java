@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
@@ -35,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String MyPREFERENCES = "Session" ;
     SharedPreferences sharedpreferences;
-
+    String errorM;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,11 +52,14 @@ public class MainActivity extends AppCompatActivity {
 
         //SharedPreferences prefs = getPreferences(this);
         String value =sharedpreferences.getString("email",null);
-        if(!value.isEmpty()){
+
+        if((value!=null)&&!value.isEmpty()){
             //Toast.makeText(MainActivity.this, email, Toast.LENGTH_SHORT).show();
             Intent applyIntent=new Intent(this, BugApplyActivity.class);
             startActivity(applyIntent);
         }
+
+
 
 
     }
@@ -74,21 +78,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void signIn(View view) {
-        email = editTextEmail.getText().toString();
-        password = editTextPassword.getText().toString();
+        email = editTextEmail.getText().toString().trim();
+        password = editTextPassword.getText().toString().trim();
 
         if(isValidEmail() && isValidPasswd()) {
             loginUser(email, password);
         }
+        else
+            Toast.makeText(MainActivity.this, errorM, Toast.LENGTH_SHORT).show();
+
     }
 
     // 이메일 유효성 검사
     private boolean isValidEmail() {
         if (email.isEmpty()) {
             // 이메일 공백
+            errorM="이메일을 입력해주세요";
             return false;
         } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             // 이메일 형식 불일치
+            errorM="올바른 이메일을 입력해주세요";
             return false;
         } else {
             return true;
@@ -99,9 +108,11 @@ public class MainActivity extends AppCompatActivity {
     private boolean isValidPasswd() {
         if (password.isEmpty()) {
             // 비밀번호 공백
+            errorM="비밀번호를 입력해주세요";
             return false;
         } else if (!PASSWORD_PATTERN.matcher(password).matches()) {
             // 비밀번호 형식 불일치
+            errorM="올바른 비밀번호를 입력해주세요";
             return false;
         } else {
             return true;
