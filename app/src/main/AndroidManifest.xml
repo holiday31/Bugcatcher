@@ -15,7 +15,6 @@
             android:name="com.google.firebase.ml.vision.DEPENDENCIES"
             android:value="chat"/>
         <activity android:name=".ProgressActivity" />
-        <activity android:name=".MyPageActivity" />
         <activity android:name=".FindPwActivity" />
         <activity android:name=".MyinfoActivity" />
         <activity
@@ -26,7 +25,6 @@
             android:theme="@android:style/Theme.Dialog" />
         <activity android:name=".FindIdActivity" />
         <activity android:name=".BugApplyActivity" />
-        <activity android:name=".LoginActivity" />
         <activity android:name=".SignupActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
