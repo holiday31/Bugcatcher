@@ -1,5 +1,4 @@
 package net.skhu.bugcatcher;
-
 import android.content.Context;
 
 import android.content.Intent;
@@ -8,7 +7,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
@@ -18,11 +16,10 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
+
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+
 
 
 import java.util.regex.Pattern;
@@ -42,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private String email = "";
     private String password = "";
 
+
     public static final String MyPREFERENCES = "Session" ;
     SharedPreferences sharedpreferences;
     String errorM;
@@ -49,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
     private DatabaseReference ref = firebaseDatabase.getReference();
 
     String value;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
         editTextEmail = findViewById(R.id.et_eamil);
         editTextPassword = findViewById(R.id.et_password);
+
         sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
 
         //SharedPreferences prefs = getPreferences(this);
@@ -69,7 +69,6 @@ public class MainActivity extends AppCompatActivity {
             Intent applyIntent=new Intent(this, MainMapActivity.class);
             startActivity(applyIntent);
         }
-
 
 
 
@@ -99,6 +98,18 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(MainActivity.this, errorM, Toast.LENGTH_SHORT).show();
 
     }
+
+
+    public void findID_clicked(View view) {
+        Intent findIdIntent = new Intent(this, FindIdActivity.class);
+        startActivity(findIdIntent);
+    }
+
+    public void findpassword_clicked(View view) {
+        Intent findpasswordIntent = new Intent(this, FindPwActivity.class);
+        startActivity(findpasswordIntent);
+    }
+
 
     // 이메일 유효성 검사
     private boolean isValidEmail() {
@@ -133,7 +144,6 @@ public class MainActivity extends AppCompatActivity {
 
     // 로그인
     private void loginUser(final String email, String password) {
-
         firebaseAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -141,7 +151,6 @@ public class MainActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // 로그인 성공
                             Toast.makeText(MainActivity.this, R.string.success_login, Toast.LENGTH_SHORT).show();
-
                             SharedPreferences.Editor editor = sharedpreferences.edit();
                             editor.putString("email", email);
                             editor.commit();
@@ -155,4 +164,5 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
     }
+
 }

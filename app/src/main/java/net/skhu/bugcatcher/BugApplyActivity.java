@@ -24,8 +24,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.Locale;
-
 public class BugApplyActivity extends AppCompatActivity {
     private EditText inputContent;
     private EditText inputReward;
@@ -51,7 +49,6 @@ public class BugApplyActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bug_apply);
-
         SharedPreferences sharedpreferences = getSharedPreferences(MainActivity.MyPREFERENCES, Context.MODE_PRIVATE);
         email=sharedpreferences.getString("email",null);
 
@@ -88,6 +85,7 @@ public class BugApplyActivity extends AppCompatActivity {
         spinner = (Spinner) findViewById(R.id.spinner);
         rewardIndex = spinner.getSelectedItemPosition();
 
+
     }
 
     public void apply(View v) {
@@ -114,9 +112,6 @@ public class BugApplyActivity extends AppCompatActivity {
         }
     }
 
-    private void check(){
-
-    }
 
     private boolean isValidInfo() {
 
@@ -126,9 +121,11 @@ public class BugApplyActivity extends AppCompatActivity {
         else if (reward.isEmpty()) {
             errorMessage = "보상을 입력하세요.";
         }
+
         else if (size.isEmpty()) {
             errorMessage = "벌레 크기를 선택하세요.";
         }
+
         else{
             return true;
         }

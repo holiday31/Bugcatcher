@@ -39,6 +39,19 @@
         <activity android:name=".BugApplyActivity"
             android:theme="@style/AppTheme.NoActionBar"
             />
+        <meta-data
+            android:name="com.google.firebase.ml.vision.DEPENDENCIES"
+            android:value="chat"/>
+        <activity android:name=".ProgressActivity" />
+        <activity android:name=".FindPwActivity" />
+        <activity android:name=".MyinfoActivity" />
+        <activity
+            android:name=".ReviewActivity"
+            android:theme="@android:style/Theme.Dialog" />
+        <activity
+            android:name=".CheckIdActivity"
+            android:theme="@android:style/Theme.Dialog" />
+        <activity android:name=".FindIdActivity" />
 
         <activity android:name=".SignupActivity" />
         <activity android:name=".MainActivity">

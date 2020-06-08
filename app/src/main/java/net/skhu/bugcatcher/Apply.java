@@ -6,10 +6,12 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Apply implements Serializable {
+
     String email;
     String content;
     String size;
     String reward;
+
     double latitude;
     double longitude;
     String address1;
@@ -35,12 +37,14 @@ public class Apply implements Serializable {
         this.content=content;
         this.size=size;
         this.reward=reward;
+
         this.state=state;
         this.maxreward=maxreward;
         this.latitude=latitude;
         this.longitude=longitude;
         this.address1=address1;
         this.address2=address2;
+
     }
     public String getContent() {
         return content;
@@ -53,6 +57,7 @@ public class Apply implements Serializable {
     public String getReward() {
         return reward;
     }
+
 
     public int getState() {
         return state;
@@ -120,4 +125,5 @@ public class Apply implements Serializable {
     public void setAddress2(String address2) {
         this.address2 = address2;
     }
+
 }
