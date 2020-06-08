@@ -1,6 +1,9 @@
 package net.skhu.bugcatcher;
 
+import android.content.Context;
+
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -15,6 +18,11 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 
 import java.util.regex.Pattern;
@@ -34,6 +42,13 @@ public class MainActivity extends AppCompatActivity {
     private String email = "";
     private String password = "";
 
+    public static final String MyPREFERENCES = "Session" ;
+    SharedPreferences sharedpreferences;
+    String errorM;
+    private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+    private DatabaseReference ref = firebaseDatabase.getReference();
+
+    String value;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +59,20 @@ public class MainActivity extends AppCompatActivity {
 
         editTextEmail = findViewById(R.id.et_eamil);
         editTextPassword = findViewById(R.id.et_password);
+        sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+
+        //SharedPreferences prefs = getPreferences(this);
+        value =sharedpreferences.getString("email",null);
+
+        if((value!=null)&&!value.isEmpty()){
+            //Toast.makeText(MainActivity.this, email, Toast.LENGTH_SHORT).show();
+            Intent applyIntent=new Intent(this, MainMapActivity.class);
+            startActivity(applyIntent);
+        }
+
+
+
+
     }
 
     public void singUp(View view) {
@@ -60,21 +89,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void signIn(View view) {
-        email = editTextEmail.getText().toString();
-        password = editTextPassword.getText().toString();
+        email = editTextEmail.getText().toString().trim();
+        password = editTextPassword.getText().toString().trim();
 
         if (isValidEmail() && isValidPasswd()) {
             loginUser(email, password);
         }
+        else
+            Toast.makeText(MainActivity.this, errorM, Toast.LENGTH_SHORT).show();
+
     }
 
     // 이메일 유효성 검사
     private boolean isValidEmail() {
         if (email.isEmpty()) {
             // 이메일 공백
+            errorM="이메일을 입력해주세요";
             return false;
         } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             // 이메일 형식 불일치
+            errorM="올바른 이메일을 입력해주세요";
             return false;
         } else {
             return true;
@@ -85,9 +119,11 @@ public class MainActivity extends AppCompatActivity {
     private boolean isValidPasswd() {
         if (password.isEmpty()) {
             // 비밀번호 공백
+            errorM="비밀번호를 입력해주세요";
             return false;
         } else if (!PASSWORD_PATTERN.matcher(password).matches()) {
             // 비밀번호 형식 불일치
+            errorM="올바른 비밀번호를 입력해주세요";
             return false;
         } else {
             return true;
@@ -96,7 +132,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     // 로그인
-    private void loginUser(String email, String password) {
+    private void loginUser(final String email, String password) {
+
         firebaseAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -105,8 +142,12 @@ public class MainActivity extends AppCompatActivity {
                             // 로그인 성공
                             Toast.makeText(MainActivity.this, R.string.success_login, Toast.LENGTH_SHORT).show();
 
+                            SharedPreferences.Editor editor = sharedpreferences.edit();
+                            editor.putString("email", email);
+                            editor.commit();
                             Intent mainMapIntent = new Intent(getApplicationContext(), MainMapActivity.class);
                             startActivity(mainMapIntent);
+
                         } else {
                             // 로그인 실패
                             Toast.makeText(MainActivity.this, R.string.failed_login, Toast.LENGTH_SHORT).show();
