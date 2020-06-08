@@ -42,6 +42,7 @@
     <string name="nav_mypage_title">내 정보 수정</string>
     <string name="nav_setting_title">앱 설정</string>
     <string name="nav_logout_title">로그아웃</string>
+    <string name="nav_switch_title">계속 잡아줄게  </string>
 
     <string name="fragment_main_text">메인 프래그먼트</string>
     <string name="fragment_log_text">사용 내역 프래그먼트</string>
@@ -52,7 +53,7 @@
     <string name="nav_header_name">황은하 님</string>
     <string name="nav_header_email">android.studio@android.com</string>
 
-    <string name="map_activity_title">메인 화면</string>
+    <string name="map_activity_title">현재 위치</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 

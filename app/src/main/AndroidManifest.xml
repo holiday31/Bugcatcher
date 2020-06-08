@@ -3,6 +3,8 @@
     package="net.skhu.bugcatcher">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -28,7 +30,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="API 키" />
+            android:value="AIzaSyApcsDRla23dR1utZuyrnsH2ACTffmELx4" />
 
         <meta-data
             android:name="preloaded_fonts"

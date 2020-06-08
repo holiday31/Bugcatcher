@@ -15,6 +15,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
@@ -23,12 +25,16 @@ import com.google.firebase.auth.FirebaseAuth;
 public class MainMapActivity extends AppCompatActivity {
 
     private DrawerLayout mDrawerLayout;
-    private Context context = this;
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_map);
+
+        context = this.getBaseContext();
+
+        final TextView mainTitle = findViewById(R.id.toolbar_title);
 
         FragmentManager fm = getSupportFragmentManager();
         final FragmentTransaction fragmentTransaction = fm.beginTransaction();
@@ -37,18 +43,10 @@ public class MainMapActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayShowTitleEnabled(false);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp);
-        }
-
-        // 밑의 네 줄 대신 위의 if 문으로 생성함
-//        ActionBar actionBar = getSupportActionBar();
-//        actionBar.setDisplayShowTitleEnabled(false);    // 기존 title 지우기
-//        actionBar.setDisplayHomeAsUpEnabled(true);  // 메뉴 버튼 만들기
-//        actionBar.setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp);  // 메뉴 버튼 이미지 지정
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp);
 
         mDrawerLayout = findViewById(R.id.drawer_layout);
 
@@ -59,32 +57,32 @@ public class MainMapActivity extends AppCompatActivity {
                 item.setChecked(true);
                 mDrawerLayout.closeDrawers();
 
-                Fragment fr = new MainFragment();
-
                 int id = item.getItemId();
                 String title = item.getTitle().toString();
 
-                if (id == R.id.nav_progress) {
-                    Toast.makeText(context, title + ": 진행 사항", Toast.LENGTH_SHORT).show();
-                    fr = new ProgressFragment();
-                } else if (id == R.id.nav_log) {
-                    Toast.makeText(context, title + ": 사용 내역", Toast.LENGTH_SHORT).show();
-                    fr = new LogFragment();
-                } else if (id == R.id.nav_mypage) {
-                    Toast.makeText(context, title + ": 마이페이지", Toast.LENGTH_SHORT).show();
-                    fr = new MyPageFragment();
-                } else if (id == R.id.nav_setting) {
-                    Toast.makeText(context, title + ": 설정", Toast.LENGTH_SHORT).show();
-                    fr = new SettingFragment();
-                } else if (id == R.id.nav_logout) {
-                    Toast.makeText(context, title + ": 로그아웃", Toast.LENGTH_SHORT).show();
+                switch (id) {
+                    case R.id.nav_progress:
+                        selectFragment(new ProgressFragment());
+                        mainTitle.setText(title);
+                        break;
+                    case R.id.nav_log:
+                        selectFragment(new LogFragment());
+                        mainTitle.setText(title);
+                        break;
+                    case R.id.nav_mypage:
+                        selectFragment(new MyPageFragment());
+                        mainTitle.setText(title);
+                        break;
+                    case R.id.nav_setting:
+                        selectFragment(new SettingFragment());
+                        mainTitle.setText(title);
+                        break;
+                    case R.id.nav_logout:
+                        Toast.makeText(context, title + ": 로그아웃 시도 중", Toast.LENGTH_SHORT).show();
+                        selectFragment(new MainFragment());
+                        mainTitle.setText("현재 위치");
+                        break;
                 }
-
-                FragmentManager fm = getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fm.beginTransaction();
-                fragmentTransaction.replace(R.id.fragmentMain, fr);
-                fragmentTransaction.commit();
-
                 return true;
             }
         });
@@ -95,7 +93,7 @@ public class MainMapActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
 
-        if(id == android.R.id.home){
+        if (id == android.R.id.home) {
             mDrawerLayout.openDrawer(GravityCompat.START);
             return true;
         }
@@ -115,5 +113,14 @@ public class MainMapActivity extends AppCompatActivity {
         } else {
             super.onBackPressed();
         }
+    }
+
+    private void selectFragment(Fragment fragment) {
+        // 액티비티 내의 프래그먼트를 관리하려면 FragmentManager를 사용해야 함.
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragmentMain, fragment);
+        // FragmentTransaction을 변경하고 나면, 반드시 commit()을 호출해야 변경 내용이 적용됨
+        fragmentTransaction.commit();
     }
 }
