@@ -1,6 +1,8 @@
 package net.skhu.bugcatcher;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Catcher implements Serializable {
     String phone;
@@ -10,6 +12,7 @@ public class Catcher implements Serializable {
     double distance;
     float score;
     int reviewcount;
+    HashMap<String,String> apply=new HashMap<>();
 
     public String getPhone() {
         return phone;
@@ -25,6 +28,14 @@ public class Catcher implements Serializable {
         this.score = score;
         this.reviewcount = reviewcount;
         this.phone=phone;
+    }
+
+    public HashMap<String, String> getApply() {
+        return apply;
+    }
+
+    public void setApply(HashMap<String, String> apply) {
+        this.apply = apply;
     }
 
     public String getName() {

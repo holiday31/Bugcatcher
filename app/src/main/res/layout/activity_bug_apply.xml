@@ -1,184 +1,169 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingRight="10dp"
-    tools:context=".BugApplyActivity">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 
-    <Button
-        android:id="@+id/button"
-        android:layout_width="200dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="64dp"
-        android:background="@drawable/fui_idp_button_background_email"
-        android:text="@string/apply_submit"
-        android:textColor="@color/common_google_signin_btn_text_dark_default"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:onClick="apply"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="20dp"
+        android:orientation="vertical">
+
+
+    <TextView
+        android:id="@+id/apply_title"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:textAlignment="center"
+        android:text="@string/apply_title"
+        android:textSize="18sp" />
 
     <LinearLayout
-        android:id="@+id/topLayout"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginLeft="24dp"
-        android:layout_marginTop="80dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginRight="24dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.444"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
-        tools:context=".BugApplyActivity">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:paddingTop="20dp">
 
         <TextView
-            android:id="@+id/apply_title"
-            android:layout_width="match_parent"
+            android:id="@+id/apply_content_view"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="4"
             android:gravity="center_horizontal"
-            android:text="@string/apply_title"
-            android:textSize="18sp" />
+            android:text="@string/apply_content" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingTop="40dp">
-
-            <TextView
-                android:id="@+id/apply_content_view"
-                android:layout_width="8dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:text="@string/apply_content" />
-
-            <EditText
-                android:id="@+id/apply_content"
-                android:layout_width="wrap_content"
-                android:layout_height="119dp"
-                android:layout_weight="1"
-                android:ems="10"
-                android:hint="@string/apply_content_placeholder"
-                android:importantForAutofill="no"
-                android:inputType="textMultiLine|textPersonName"
-                android:paddingRight="10dp"
-                android:textSize="14sp" />
-
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/textView6"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:paddingTop="20dp"
-            android:text="@string/apply_detail"
-            android:textSize="12sp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/apply_size_view"
-                android:layout_width="189dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:paddingTop="20dp"
-                android:text="@string/bug_size" />
-
-            <RadioGroup
-                android:id="@+id/size_group"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:orientation="horizontal"
-                android:paddingTop="20dp">
-
-                <RadioButton
-                    android:id="@+id/bigBtn"
-                    android:layout_width="80dp"
-                    android:layout_height="wrap_content"
-                    android:text="@string/big_size"
-                    android:textSize="12sp" />
-
-                <RadioButton
-                    android:id="@+id/middleBtn"
-                    android:layout_width="80dp"
-                    android:layout_height="wrap_content"
-                    android:text="@string/middle_size"
-                    android:textSize="12sp" />
-
-                <RadioButton
-                    android:id="@+id/smallBtn"
-                    android:layout_width="80dp"
-                    android:layout_height="wrap_content"
-                    android:text="@string/small_size"
-                    android:textSize="12sp" />
-            </RadioGroup>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="40dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="8dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:text="사례 금액대" />
-
-            <Spinner
-                android:id="@+id/spinner"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:entries="@array/rewards" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingTop="30dp">
-
-            <TextView
-                android:id="@+id/apply_reward_view"
-                android:layout_width="8dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:text="@string/apply_reward_text" />
-
-            <EditText
-                android:id="@+id/apply_reward"
-                android:layout_width="wrap_content"
-                android:layout_height="99dp"
-                android:layout_weight="1"
-                android:ems="10"
-                android:hint="@string/apply_reward_placeholder"
-                android:importantForAutofill="no"
-                android:inputType="textMultiLine|textPersonName"
-                android:textSize="14sp" />
-
-        </LinearLayout>
+        <EditText
+            android:id="@+id/apply_content"
+            android:layout_width="wrap_content"
+            android:layout_height="100dp"
+            android:layout_weight="6"
+            android:ems="10"
+            android:hint="@string/apply_content_placeholder"
+            android:importantForAutofill="no"
+            android:inputType="textMultiLine|textPersonName"
+            android:paddingRight="10dp"
+            android:textSize="14sp" />
 
     </LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:paddingTop="20dp"
+        android:text="@string/apply_detail"
+        android:textSize="12sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/apply_size_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:paddingTop="20dp"
+            android:text="@string/bug_size" />
+
+        <RadioGroup
+            android:id="@+id/size_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:paddingTop="20dp">
+
+            <RadioButton
+                android:id="@+id/bigBtn"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:text="@string/big_size"
+                android:textSize="12sp" />
+
+            <RadioButton
+                android:id="@+id/middleBtn"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:text="@string/middle_size"
+                android:textSize="12sp" />
+
+            <RadioButton
+                android:id="@+id/smallBtn"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:text="@string/small_size"
+                android:textSize="12sp" />
+        </RadioGroup>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="40dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="8dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:text="사례 금액대" />
+
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:entries="@array/rewards" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="30dp">
+
+        <TextView
+            android:id="@+id/apply_reward_view"
+            android:layout_width="8dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:text="@string/apply_reward_text" />
+
+        <EditText
+            android:id="@+id/apply_reward"
+            android:layout_width="wrap_content"
+            android:layout_height="80dp"
+            android:layout_weight="1"
+            android:ems="10"
+            android:hint="@string/apply_reward_placeholder"
+            android:importantForAutofill="no"
+            android:inputType="textMultiLine|textPersonName"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="50dp">
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="200dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/fui_idp_button_background_email"
+            android:onClick="apply"
+            android:text="@string/apply_submit"
+            android:textColor="@color/common_google_signin_btn_text_dark_default"
+            android:textSize="18sp" />
+    </LinearLayout>
+    </LinearLayout>
+
+

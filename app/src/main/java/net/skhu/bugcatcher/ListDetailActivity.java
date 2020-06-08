@@ -37,11 +37,15 @@ public class ListDetailActivity extends Activity {
     TextView reviewcount;
     TextView score;
     ListView listview;
+    ListViewAdapter adapter;
+    String applyId;
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference ref = firebaseDatabase.getReference();
 
+    final ArrayList<String> reviewlist=new ArrayList<>();
+    final ArrayList<Float> scorelist=new ArrayList<>();
 
-    public static final String EXTRA_WORKOUT_ID="id";
+   // public static final String EXTRA_WORKOUT_ID="id";
 
 
     @Override
@@ -51,11 +55,9 @@ public class ListDetailActivity extends Activity {
         setContentView(R.layout.activity_list_detail);
 
 
-
-        final ArrayList<String> reviewlist=new ArrayList<>();
-        final ArrayList<Float> scorelist=new ArrayList<>();
         Intent intent = getIntent();
         catcher = (Catcher) intent.getSerializableExtra("catcher");
+        applyId=intent.getExtras().getString("applyId");
 
         distance = (TextView) findViewById(R.id.detail_distance);
         name = (TextView) findViewById(R.id.detail_name);
@@ -83,6 +85,7 @@ public class ListDetailActivity extends Activity {
                     scorelist.add(snapshot.child("starscore").getValue(Float.class));
 
                 }
+                adapter.notifyDataSetChanged();
             }
 
             @Override
@@ -90,7 +93,7 @@ public class ListDetailActivity extends Activity {
 
             }
         });
-        ListViewAdapter adapter=new ListViewAdapter(ListDetailActivity.this,0, reviewlist,scorelist);
+       adapter=new ListViewAdapter(ListDetailActivity.this,0, reviewlist,scorelist);
         listview.setAdapter(adapter);
 
         reviewcount.setOnClickListener(new View.OnClickListener() {
@@ -145,25 +148,26 @@ public class ListDetailActivity extends Activity {
         //Intent intent = new Intent(getApplicationContext(), ListDetailActivity.class);
         //intent.putExtra("catcher", catcher);
 
-        ref.child("catcherlist").addValueEventListener(new ValueEventListener() {
+        ref.child("catcherlist").addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.child(catcher.getPhone()).child("connect").getValue(Integer.class)==0){
-                    Toast.makeText(ListDetailActivity.this, "호출중입니다.", Toast.LENGTH_SHORT).show();
+                    ref.child("catcherlist").child(catcher.getPhone()).child("connect").setValue(1);
+                    ref.child("apply").child(applyId).child("state").setValue(1);
+                    ref.child("apply").child(applyId).child("match").setValue(catcher.getPhone());
+                    ref.child("catcherlist").child(catcher.getPhone()).child("match").setValue(applyId);
+                    Toast.makeText(ListDetailActivity.this, "매칭 성공!", Toast.LENGTH_SHORT).show();
                 }
-
                 else
                     Toast.makeText(ListDetailActivity.this, "이미 매칭된 사용자입니다.", Toast.LENGTH_SHORT).show();
 
-
-                /*
-                for (DataSnapshot snapshot : dataSnapshot.child(catcher.getPhone()).getChildren()) {
-                    //String key=snapshot.getKey();
+//                for (DataSnapshot snapshot : dataSnapshot.child(catcher.getPhone()).getChildren()) {
+//                    String key=snapshot.getKey();
 //                    reviewlist.add(snapshot.child("review").getValue(String.class));
 //                    scorelist.add(snapshot.child("starscore").getValue(Float.class));
-                }
-                */
+//                }
+
             }
 
             @Override

@@ -42,8 +42,9 @@ public class CatcherListActivity extends AppCompatActivity {
     float average;
     int reviewcount=0;
     static boolean calledAlready = false;
-    double c_latitude=37.497793;
-    double c_longtitude=126.771798;
+    double c_latitude=37.502693;
+    double c_longitude=126.4257;
+    String applyId;
     CatcherListAdapter adapter;
 
     private ArrayList<Catcher> list=new ArrayList<>();
@@ -54,6 +55,9 @@ public class CatcherListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_catcher_list);
+        Intent intent = getIntent();
+        applyId=intent.getExtras().getString("applyId");
+
         listview=(ListView) findViewById(R.id.list_view);
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -62,6 +66,7 @@ public class CatcherListActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(getApplicationContext(), ListDetailActivity.class);
                 intent.putExtra("catcher", catcher);
+                intent.putExtra("applyId", applyId);
                 startActivity(intent);
             }
         });
@@ -82,30 +87,22 @@ public class CatcherListActivity extends AppCompatActivity {
 //        for (int i=0;i<5;i++)
 //            list.add(catcher);
 
-
         ref.addValueEventListener(new ValueEventListener() {
-
             float sum;
             int count;
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 list.clear();
-                for (DataSnapshot snapshot1 : dataSnapshot.child("catcherlist").getChildren()) {
-//                    Catcher catcher=new Catcher(name,100.02,(float)4.5,2);
-//                    for (int i=0;i<5;i++)
-//                    list.add(catcher);
-
+                for (DataSnapshot snapshot1 : dataSnapshot.child("apply").child(applyId).child("catcher").getChildren()) {
                     sum = 0;
                     count = 0;
-                    //reviewcount=0;
-                    //reviewcount++;
 
-                    phone = snapshot1.getKey();
+                    phone = snapshot1.getValue(String.class);
                     latitude=dataSnapshot.child("catcherlist").child(phone).child("latitude").getValue(Double.class);
-                    longtitude=dataSnapshot.child("catcherlist").child(phone).child("longtitude").getValue(Double.class);
+                    longtitude=dataSnapshot.child("catcherlist").child(phone).child("longitude").getValue(Double.class);
 
                     //500m이내 거리 사용자인지 확인
-                    distance= getDistance(c_latitude,c_longtitude,latitude,longtitude);
+                    distance= getDistance(c_latitude,c_longitude,latitude,longtitude);
                     if(distance>500)
                         continue;
                     name = dataSnapshot.child("catcherlist").child(phone).child("name").getValue(String.class);
@@ -177,7 +174,6 @@ public class CatcherListActivity extends AppCompatActivity {
     public void onStart(){
         super.onStart();
         createCatcher();
-
         adapter=new CatcherListAdapter(this,0,list);
         listview.setAdapter(adapter);
     }

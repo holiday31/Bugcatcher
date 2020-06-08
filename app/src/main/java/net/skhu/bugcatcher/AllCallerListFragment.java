@@ -25,35 +25,35 @@ import java.util.List;
 import androidx.fragment.app.ListFragment;
 
 public class AllCallerListFragment extends ListFragment {
-    private ListView listview;
+
+    String applyId;
     String phone;
     private String email;
     String name;
     double latitude;
-    double longtitude;
+    double longitude;
     double distance;
     //double distance;
-    //double score;
-    float average;
-    int reviewcount=0;
-    static boolean calledAlready = false;
-    double c_latitude=37.497793;
-    double c_longtitude=126.771798;
-    private CatcherListAdapter adapter;
-    private ArrayList<Catcher> list=new ArrayList<>();
+
+    double c_latitude=37.502693;
+    double c_longitude=126.4257;
+    private CallerListAdapter adapter;
+    private ArrayList<Apply> list=new ArrayList<>();
+    private ArrayList<String> applyIdList=new ArrayList<>();
+    private ArrayList<Double> distanceList=new ArrayList<>();
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference ref = firebaseDatabase.getReference();
 
 
     static interface Listener{
-        void itemClicked(Catcher catcher);
+        void itemClicked(Apply apply,String applyId,int distance);
     }
     private Listener listener;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        createCatcher();
-        adapter=new CatcherListAdapter(inflater.getContext(),0,list);
+        createApplyList();
+        adapter=new CallerListAdapter(inflater.getContext(),0,list,c_latitude,c_longitude);
         setListAdapter(adapter);
         return super.onCreateView(inflater,container,savedInstanceState);
     }
@@ -67,11 +67,11 @@ public class AllCallerListFragment extends ListFragment {
     @Override
     public void onListItemClick(ListView listview,View itemView,int position,long id){
         if(listener!=null){
-            listener.itemClicked(list.get(position));
+            listener.itemClicked(list.get(position),applyIdList.get(position),(int)Math.round(distanceList.get(position)));
         }
     }
 
-    public void createCatcher(){
+    public void createApplyList(){
 
         ref.addValueEventListener(new ValueEventListener() {
 
@@ -80,54 +80,25 @@ public class AllCallerListFragment extends ListFragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 list.clear();
-                for (DataSnapshot snapshot1 : dataSnapshot.child("catcherlist").getChildren()) {
-//                    Catcher catcher=new Catcher(name,100.02,(float)4.5,2);
-//                    for (int i=0;i<5;i++)
-//                    list.add(catcher);
+                applyIdList.clear();
+                distanceList.clear();
+                for (DataSnapshot snapshot1 : dataSnapshot.child("apply").getChildren()) {
+                    applyId = snapshot1.getKey();
+                    Apply apply= dataSnapshot.child("apply").child(applyId).getValue(Apply.class);
 
-                    sum = 0;
-                    count = 0;
-                    //reviewcount=0;
-                    //reviewcount++;
-
-                    phone = snapshot1.getKey();
-                    latitude=dataSnapshot.child("catcherlist").child(phone).child("latitude").getValue(Double.class);
-                    longtitude=dataSnapshot.child("catcherlist").child(phone).child("longtitude").getValue(Double.class);
+                    //latitude=dataSnapshot.child("apply").child(applyId).child("latitude").getValue(Double.class);
+                    //longitude=dataSnapshot.child("apply").child(applyId).child("longitude").getValue(Double.class);
 
                     //500m이내 거리 사용자인지 확인
-                    distance= getDistance(c_latitude,c_longtitude,latitude,longtitude);
+                    distance= getDistance(c_latitude,c_longitude,apply.latitude,apply.longitude);
                     if(distance>500)
                         continue;
-                    name = dataSnapshot.child("catcherlist").child(phone).child("name").getValue(String.class);
-                    Log.d("phoneNumber",phone);
-                    //Log.d("catcherName: ",name);
-                    //Log.d("count::",count+"");
-                    Log.d("reviewcount::",reviewcount+"");
-
-
-                    for (DataSnapshot snapshot2 : dataSnapshot.child("review").child(phone).getChildren()) {
-                        String a = snapshot2.getKey();
-                        float star = snapshot2.child("starscore").getValue(Float.class);
-                        count++;
-                        sum+=star;
-
-                        Log.d("키 값", a);
-                        Log.d("별점", a+" -"+star + "");
-                        Log.d("카운트", count+"");
-                        Log.d("합", sum+"");
-
-                    }
-
-
-                    if(count>0)
-                        average=sum/count;
-                    else
-                        average=0;
-
-                    Catcher catcher=new Catcher(phone,name,distance,average,count);
-                    list.add(catcher);
-                    Log.d("Catcher Info",catcher.toString());
-
+                    else if (apply.getState()!=0)   //이미 매칭된 상태일 경우
+                        continue;
+                    list.add(apply);
+                    applyIdList.add(applyId);
+                    distanceList.add(distance);
+                    Log.d("apply Info",apply.getContent());
                     adapter.notifyDataSetChanged();
                 }
 
@@ -139,13 +110,7 @@ public class AllCallerListFragment extends ListFragment {
             }
         });
 
-
-        //Catcher catcher=new Catcher(name,100.02,4.3,count);
-        //Log.d("사용자",catcher.name+"  "+catcher.distance+"  "+catcher.reviewcount);
     }
-
-
-
     //미터 단위
     public double getDistance(double lat1 , double lng1 , double lat2 , double lng2 ){
         double distance;
@@ -162,4 +127,8 @@ public class AllCallerListFragment extends ListFragment {
 
         return distance;
     }
+
+
+
+
 }

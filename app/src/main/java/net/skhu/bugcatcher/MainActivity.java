@@ -15,6 +15,11 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 
 import java.util.regex.Pattern;
@@ -37,7 +42,10 @@ public class MainActivity extends AppCompatActivity {
     public static final String MyPREFERENCES = "Session" ;
     SharedPreferences sharedpreferences;
     String errorM;
+    private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+    private DatabaseReference ref = firebaseDatabase.getReference();
 
+    String value;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
         sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
 
         //SharedPreferences prefs = getPreferences(this);
-        String value =sharedpreferences.getString("email",null);
+        value =sharedpreferences.getString("email",null);
 
         if((value!=null)&&!value.isEmpty()){
             //Toast.makeText(MainActivity.this, email, Toast.LENGTH_SHORT).show();
@@ -134,6 +142,7 @@ public class MainActivity extends AppCompatActivity {
                             SharedPreferences.Editor editor = sharedpreferences.edit();
                             editor.putString("email", email);
                             editor.commit();
+
                             Intent applyIntent=new Intent(MainActivity.this, BugApplyActivity.class);
                             startActivity(applyIntent);
                         } else {

@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 
-public class CallerListActivity extends AppCompatActivity implements AllCallerListFragment.Listener {
+public class CallerListActivity extends AppCompatActivity implements AllCallerListFragment.Listener,WaitCallerListFragment.WaitListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -13,10 +13,24 @@ public class CallerListActivity extends AppCompatActivity implements AllCallerLi
         setContentView(R.layout.activity_caller_list);
     }
 
+
     @Override
-    public void itemClicked(Catcher catcher){
-        Intent intent = new Intent(getApplicationContext(), ListDetailActivity.class);
-        intent.putExtra("catcher", catcher);
+    public void itemClicked(Apply apply,String applyId,int distance){
+        Intent intent = new Intent(getApplicationContext(), CallerListDetailActivity.class);
+        intent.putExtra("apply", apply);
+        intent.putExtra("applyId",applyId);
+        intent.putExtra("distance",distance);
         startActivity(intent);
     }
+
+    @Override
+    public void waitItemClicked(Apply apply,String applyId,int distance){
+        Intent intent = new Intent(getApplicationContext(), WaitCallerDetailActivity.class);
+        intent.putExtra("apply", apply);
+        intent.putExtra("applyId",applyId);
+        intent.putExtra("distance",distance);
+        startActivity(intent);
+    }
+
+
 }
