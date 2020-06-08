@@ -39,6 +39,8 @@ public class MyinfoActivity extends AppCompatActivity {
         my_phone = findViewById(R.id.my_phone);
 
 
+
+        //로그인 정보 받아오기 (이메일,등 )
         FirebaseUser user = firebaseAuth.getCurrentUser();
         my_email.setText(user.getEmail());
         my_name.setText(user.getDisplayName());
