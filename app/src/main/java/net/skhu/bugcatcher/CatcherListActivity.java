@@ -9,6 +9,8 @@ import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -55,10 +57,34 @@ public class CatcherListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_catcher_list);
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            // User is signed in
+            email=user.getEmail();
+            Log.d("user",email);
+        } else {
+            // No user is signed in
+            Log.d("user","no user");
+        }
+
         Intent intent = getIntent();
-        applyId=intent.getExtras().getString("applyId");
+        if(intent != null) {//푸시알림을 선택해서 실행한것이 아닌경우 예외처리
+            String notificationData = intent.getStringExtra("test");
+            if(notificationData != null)
+                Log.d("FCM_TEST", notificationData);
+        }
+
+
+
+        //Intent intent = getIntent();
+        //applyId=intent.getExtras().getString("applyId");
+
+        createCatcherList();
 
         listview=(ListView) findViewById(R.id.list_view);
+        adapter=new CatcherListAdapter(this,0,list);
+        listview.setAdapter(adapter);
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -71,50 +97,43 @@ public class CatcherListActivity extends AppCompatActivity {
             }
         });
 
-
-        SharedPreferences sharedpreferences = getSharedPreferences(MainActivity.MyPREFERENCES, Context.MODE_PRIVATE);
-        email=sharedpreferences.getString("email",null);
-
         //createCatcher();
         //Log.d("email:",email);
-        //CatcherListAdapter adapter=new CatcherListAdapter(this,0,list);
-        //listview.setAdapter(adapter);
+
         Log.d("adaptercreate","------------");
     }
 
-    public void createCatcher(){
-//        Catcher catcher=new Catcher(name,100.02,(float)4.5,2);
-//        for (int i=0;i<5;i++)
-//            list.add(catcher);
-
+    public void createCatcherList(){
         ref.addValueEventListener(new ValueEventListener() {
             float sum;
             int count;
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 list.clear();
-                for (DataSnapshot snapshot1 : dataSnapshot.child("apply").child(applyId).child("catcher").getChildren()) {
-                    sum = 0;
-                    count = 0;
+                for (DataSnapshot snapshot : dataSnapshot.child("apply").getChildren()) {
 
-                    phone = snapshot1.getValue(String.class);
-                    latitude=dataSnapshot.child("catcherlist").child(phone).child("latitude").getValue(Double.class);
-                    longtitude=dataSnapshot.child("catcherlist").child(phone).child("longitude").getValue(Double.class);
+                    sum=0;
+                    count=0;
+                    Log.d("email", email);
+                    //Apply apply=snapshot.child(snapshot.getKey()).getValue(Apply.class);
+                    //Log.d("iii",snapshot.getKey());
+                    String email2 = snapshot.child("email").getValue(String.class);
+                    //Log.d("email2",email2);
 
-                    //500m이내 거리 사용자인지 확인
-                    distance= getDistance(c_latitude,c_longitude,latitude,longtitude);
-                    if(distance>500)
-                        continue;
-                    name = dataSnapshot.child("catcherlist").child(phone).child("name").getValue(String.class);
-                    Log.d("phoneNumber",phone);
-                    //Log.d("catcherName: ",name);
-                    //Log.d("count::",count+"");
-                    Log.d("reviewcount::",reviewcount+"");
+                    if ((email.equals(email2)) && (snapshot.child("state").getValue(Integer.class) == 0)) {
+                        applyId = snapshot.getKey();
+                        for (DataSnapshot snapshot2 : snapshot.child("catcher").getChildren()) {
+                            String phone=snapshot2.getValue(String.class);
+                            Log.d("phone:",phone);
+                            String name=dataSnapshot.child("catcherlist").child(phone).child("name").getValue(String.class);
+                            latitude=dataSnapshot.child("catcherlist").child(phone).child("latitude").getValue(Double.class);
+                            longtitude=dataSnapshot.child("catcherlist").child(phone).child("longitude").getValue(Double.class);
 
+                            distance= getDistance(c_latitude,c_longitude,latitude,longtitude);
 
-                            for (DataSnapshot snapshot2 : dataSnapshot.child("review").child(phone).getChildren()) {
-                                String a = snapshot2.getKey();
-                                float star = snapshot2.child("starscore").getValue(Float.class);
+                            for (DataSnapshot snapshot3 : dataSnapshot.child("review").child(phone).getChildren()) {
+                                String a = snapshot3.getKey();
+                                float star = snapshot3.child("starscore").getValue(Float.class);
                                 count++;
                                 sum+=star;
 
@@ -126,30 +145,35 @@ public class CatcherListActivity extends AppCompatActivity {
                             }
 
 
-                    if(count>0)
-                        average=sum/count;
-                    else
-                        average=0;
+                            if(count>0)
+                                average=sum/count;
+                            else
+                                average=0;
+                            Catcher catcher=new Catcher(phone,name,distance,average,count);
+                            list.add(catcher);
+                        }
 
-                    Catcher catcher=new Catcher(phone,name,distance,average,count);
-                    list.add(catcher);
-                    Log.d("Catcher Info",catcher.toString());
+                        break;
+                    }
 
-                    adapter.notifyDataSetChanged();
-               }
+
+                }
+
+                if (applyId == null) {
+                    Toast.makeText(CatcherListActivity.this, "호출이 존재하지않습니다.", Toast.LENGTH_SHORT).show();
+                    Intent mapIntent = new Intent(CatcherListActivity.this, MainMapActivity.class);
+                    startActivity(mapIntent);
+                }
+                adapter.notifyDataSetChanged();
 
             }
-
             @Override
             public void onCancelled (DatabaseError databaseError){
 
             }
         });
 
-
-                    //Catcher catcher=new Catcher(name,100.02,4.3,count);
-                    //Log.d("사용자",catcher.name+"  "+catcher.distance+"  "+catcher.reviewcount);
-        }
+    }
 
 
 
@@ -173,9 +197,7 @@ public class CatcherListActivity extends AppCompatActivity {
     @Override
     public void onStart(){
         super.onStart();
-        createCatcher();
-        adapter=new CatcherListAdapter(this,0,list);
-        listview.setAdapter(adapter);
+
     }
     @Override
     public void onStop(){

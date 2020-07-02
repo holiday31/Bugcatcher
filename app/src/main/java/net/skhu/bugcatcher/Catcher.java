@@ -7,12 +7,11 @@ import java.util.HashMap;
 public class Catcher implements Serializable {
     String phone;
     String name;
-    //double latitude;
-    //double longitude;
     double distance;
     float score;
     int reviewcount;
     HashMap<String,String> apply=new HashMap<>();
+
 
     public String getPhone() {
         return phone;

@@ -18,19 +18,25 @@ public class Apply implements Serializable {
     String address2;
     int state; // 0 : 대기  1: 매칭완료
     int maxreward;
-    HashMap<String,String> catcherlist=new HashMap<>();
+    HashMap<String,String> catcher=new HashMap<>();
+    String match;
 
-    public HashMap<String, String> getCatcherlist() {
-        return catcherlist;
+    public String getMatch() {
+        return match;
     }
 
-    public void setCatcherlist(HashMap<String, String> catcherlist) {
-        this.catcherlist = catcherlist;
+    public void setMatch(String match) {
+        this.match = match;
     }
 
-    public Apply(){
-
+    public HashMap<String, String> getCatcher() {
+        return catcher;
     }
+
+    public void setCatcher(HashMap<String, String> catcherlist) {
+        this.catcher = catcherlist;
+    }
+
 
     public Apply(String email, String content, String size, String reward,int maxreward,double latitude,double longitude,String address1,String address2,int state){
         this.email=email;
@@ -44,7 +50,7 @@ public class Apply implements Serializable {
         this.longitude=longitude;
         this.address1=address1;
         this.address2=address2;
-
+        this.match=null;
     }
     public String getContent() {
         return content;
