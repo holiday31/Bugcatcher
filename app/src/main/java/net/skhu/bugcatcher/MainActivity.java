@@ -1,4 +1,5 @@
 package net.skhu.bugcatcher;
+
 import android.content.Context;
 
 import android.content.Intent;
@@ -7,6 +8,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
@@ -19,8 +21,6 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
-
 
 import java.util.regex.Pattern;
 
@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
     private String password = "";
 
 
-    public static final String MyPREFERENCES = "Session" ;
+    public static final String MyPREFERENCES = "Session";
     SharedPreferences sharedpreferences;
     String errorM;
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
@@ -62,15 +62,13 @@ public class MainActivity extends AppCompatActivity {
         sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
 
         //SharedPreferences prefs = getPreferences(this);
-        value =sharedpreferences.getString("email",null);
+        value = sharedpreferences.getString("email", null);
 
-        if((value!=null)&&!value.isEmpty()){
+        if ((value != null) && !value.isEmpty()) {
             //Toast.makeText(MainActivity.this, email, Toast.LENGTH_SHORT).show();
-            Intent applyIntent=new Intent(this, MainMapActivity.class);
+            Intent applyIntent = new Intent(this, MainMapActivity.class);
             startActivity(applyIntent);
         }
-
-
 
     }
 
@@ -93,10 +91,8 @@ public class MainActivity extends AppCompatActivity {
 
         if (isValidEmail() && isValidPasswd()) {
             loginUser(email, password);
-        }
-        else
+        } else
             Toast.makeText(MainActivity.this, errorM, Toast.LENGTH_SHORT).show();
-
     }
 
 
@@ -115,11 +111,11 @@ public class MainActivity extends AppCompatActivity {
     private boolean isValidEmail() {
         if (email.isEmpty()) {
             // 이메일 공백
-            errorM="이메일을 입력해주세요";
+            errorM = "이메일을 입력해주세요";
             return false;
         } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             // 이메일 형식 불일치
-            errorM="올바른 이메일을 입력해주세요";
+            errorM = "올바른 이메일을 입력해주세요";
             return false;
         } else {
             return true;
@@ -130,11 +126,11 @@ public class MainActivity extends AppCompatActivity {
     private boolean isValidPasswd() {
         if (password.isEmpty()) {
             // 비밀번호 공백
-            errorM="비밀번호를 입력해주세요";
+            errorM = "비밀번호를 입력해주세요";
             return false;
         } else if (!PASSWORD_PATTERN.matcher(password).matches()) {
             // 비밀번호 형식 불일치
-            errorM="올바른 비밀번호를 입력해주세요";
+            errorM = "올바른 비밀번호를 입력해주세요";
             return false;
         } else {
             return true;
@@ -164,5 +160,4 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
     }
-
 }

@@ -14,34 +14,39 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainMapActivity">
+        <activity
+            android:name=".LoadingActivity"
+            android:screenOrientation="fullSensor"
+            android:theme="@style/LoadingTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
-
+        <activity android:name=".MainMapActivity" />
         <activity
             android:name=".WaitCallerDetailActivity"
             android:theme="@android:style/Theme.Dialog" />
         <activity
             android:name=".CallerListDetailActivity"
             android:theme="@android:style/Theme.Dialog" />
-        <activity android:name=".CallerListActivity">
-
-        </activity>
+        <activity android:name=".CallerListActivity" />
         <activity
             android:name=".ListDetailActivity"
             android:theme="@android:style/Theme.Dialog" />
         <activity
             android:name=".CatcherListActivity"
             android:label="@string/title_activity_catcher_list"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".BugApplyActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
 
-        </activity>
-        <activity android:name=".BugApplyActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            />
         <meta-data
             android:name="com.google.firebase.ml.vision.DEPENDENCIES"
-            android:value="chat"/>
+            android:value="chat" />
+
         <activity android:name=".ProgressActivity" />
         <activity android:name=".FindPwActivity" />
         <activity android:name=".MyinfoActivity" />
@@ -52,19 +57,14 @@
             android:name=".CheckIdActivity"
             android:theme="@android:style/Theme.Dialog" />
         <activity android:name=".FindIdActivity" />
-
         <activity android:name=".SignupActivity" />
         <activity android:name=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
         </activity>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyApcsDRla23dR1utZuyrnsH2ACTffmELx4" />
-
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />

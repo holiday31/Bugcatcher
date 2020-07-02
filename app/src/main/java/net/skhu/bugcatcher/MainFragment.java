@@ -16,6 +16,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -88,6 +91,21 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Activi
     private View mLayout;   // Snackbar 사용을 위해 View가 필요하다.
     // Toast에는 Context가 필요했다.
 
+    // 도로명 주소를 보여줄 뷰
+    TextView main_addr;
+
+    // 상세 주소를 입력받을 곳
+    EditText sub_addr;
+
+    Button reset_addr_btn, caller_btn, catcher_btn;
+
+    // 현재 좌표값
+    double nowLongitude;
+    double nowLatitude;
+
+    // 상세 주소 입력한 것
+    String newSubAddr;
+
     public MainFragment() {
         // Required empty public constructor
     }
@@ -110,10 +128,20 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Activi
         return fragment;
     }
 
+    // Fragment를 Activity에 attach 할 때 호출한다.
+    // android.support.v4.app.Fragment에서 deprecated 된 함수이다.
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+    }
+
     // 프래그먼트를 생성하면서 넘겨준 값들이 있다면, 여기서 변수에 넣어준다. UI 초기화는 불가.
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Log.d(TAG, "onCreate");
+
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -125,6 +153,9 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Activi
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
+        Log.d(TAG, "onCreateView");
+
         locationRequest = new LocationRequest().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY).setInterval(UPDATE_INTERVAL_MS).setFastestInterval(FASTEST_UPDATE_INTERVAL_MS);
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
         builder.addLocationRequest(locationRequest);
@@ -135,6 +166,102 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Activi
 
         mapView = layout.findViewById(R.id.map);
         mapView.getMapAsync(this);
+
+//        // MainMapActivity에서 전달한 번들 저장
+//        Bundle bundle = getArguments();
+//
+//        // 번들 안의 플래그 값 불러오기
+//        final boolean switchFlag = bundle.getBoolean("switchFlag");
+
+        // 좌표로부터 받아온 주소를 보여줄 곳
+        main_addr = layout.findViewById(R.id.main_addr);
+        sub_addr = layout.findViewById(R.id.sub_addr);  // 상세 주소를 적을 곳
+
+        // 주소를 수정할 버튼
+        reset_addr_btn = layout.findViewById(R.id.reset_addr_btn);
+        reset_addr_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder ad = new AlertDialog.Builder(getActivity());
+                ad.setTitle("주소 수정");
+                ad.setMessage("현재 주소를 입력해주세요.");
+
+                // EditText 삽입하기
+                final EditText et = new EditText(getActivity());
+                ad.setView(et);
+
+                // 수정 버튼 설정
+                ad.setPositiveButton("수정", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Log.d(TAG, "수정 버튼 누름");
+
+                        // Text값 받아서 로그 남기기
+                        String value = et.getText().toString();
+                        Log.v(TAG, value);
+
+                        newSubAddr = value;
+
+                        dialogInterface.dismiss();  // 닫기
+                        // Event
+                    }
+                });
+
+                // 취소 버튼 설정
+                ad.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Log.v(TAG, "취소 버튼 누름");
+                        dialogInterface.dismiss();  // 닫기
+                        // Event
+                    }
+                });
+
+                // 창 띄우기
+                ad.show();
+            }
+        });
+
+        // 잡아줘 버튼
+        caller_btn = layout.findViewById(R.id.catcher_btn);
+        caller_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (sub_addr.getText().toString() != null) { // 상세 주소를 입력한 경우
+                    Intent intent = new Intent(getActivity(), BugApplyActivity.class);
+
+                    intent.putExtra("mainAddr", main_addr.getText());
+                    intent.putExtra("subAddr", sub_addr.getText());
+                    intent.putExtra("latitude", location.getLatitude());
+                    intent.putExtra("longitude", location.getLongitude());
+
+                    startActivity(intent);
+                } else {    // 상세 주소를 입력하지 않은 경우
+                    Toast.makeText(getActivity(), "상세 주소를 입력해주세요.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        // 잡아줄게 버튼
+        catcher_btn = layout.findViewById(R.id.catcher_btn);
+        catcher_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                if (switchFlag) { // 스위치가 켜져있을 때
+//
+//                } else { // 스위치가 꺼져있을 때
+//
+//                }
+
+
+//                Intent intent = new Intent(getActivity(), CatcherListActivity.class);
+//
+//                intent.putExtra("latitude", location.getLatitude());
+//                intent.putExtra("longitude", location.getLongitude());
+//
+//                startActivity(intent);
+            }
+        });
 
         // 여기에 두었더니 뷰가 생성되지 않아서 Null 오류가 발생했음.
 //        mLayout = getView().findViewById(R.id.layout_map);
@@ -147,6 +274,8 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Activi
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        Log.d(TAG, "onActivityCreated");
 
         mLayout = getView().findViewById(R.id.layout_map);   // snackbar를 위한 뷰
 
@@ -174,6 +303,9 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Activi
     @Override
     public void onResume() {
         super.onResume();
+
+        Log.d(TAG, "onResume");
+
         mapView.onResume();
     }
 
@@ -185,6 +317,9 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Activi
     @Override
     public void onPause() {
         super.onPause();
+
+        Log.d(TAG, "onPause");
+
         mapView.onPause();
     }
 
@@ -192,6 +327,8 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Activi
     @Override
     public void onStop() {
         super.onStop();
+
+        Log.d(TAG, "onStop");
 
         if (mFusedLocationClient != null) {
             Log.d(TAG, "onStop : call stopLocationUpdates");
@@ -202,18 +339,27 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Activi
     @Override
     public void onDestroy() {
         super.onDestroy();
+
+        Log.d(TAG, "onDestroy");
+
         mapView.onLowMemory();
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
+
+        Log.d(TAG, "onSaveInstanceState");
+
         mapView.onSaveInstanceState(outState);
     }
 
     @Override
     public void onLowMemory() {
         super.onLowMemory();
+
+        Log.d(TAG, "onLowMemory");
+
         mapView.onLowMemory();
     }
 
@@ -314,6 +460,9 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Activi
 
     public String getCurrentAddress(LatLng latlng) {
         // 지오코더... GPS를 주소로 변환
+
+        Log.d(TAG, "getCurrentAddress");
+
         Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
 
         List<Address> addresses;
@@ -331,54 +480,73 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Activi
             return "주소 미발견";
         } else {
             Address address = addresses.get(0);
-            return address.getAddressLine(0).toString();
+//            return address.getAddressLine(0).toString();
+            return address.getAddressLine(0);
         }
     }
 
     public boolean checkLocationServicesStatus() {
+        Log.d(TAG, "checkLocationServicesStatus");
+
         LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
     }
 
     public void setCurrentLocation(Location location, String markerTitle, String markerSnippet) {
+        Log.d(TAG, "setCurrentLocation");
+
         if (currentMarker != null) currentMarker.remove();
+
+        nowLatitude = location.getLatitude();
+        nowLongitude = location.getLongitude();
 
         LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
 
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(currentLatLng);
-        markerOptions.title(markerTitle);
-        markerOptions.snippet(markerSnippet);
+//        markerOptions.title(markerTitle);
+//        markerOptions.snippet(markerSnippet);
         markerOptions.draggable(true);
 
         currentMarker = mMap.addMarker(markerOptions);
 
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(currentLatLng);
         mMap.moveCamera(cameraUpdate);
+
+        main_addr.setText(markerTitle);
     }
 
     public void setDefaultLocation() {
+        Log.d(TAG, "setDefaultLocation");
+
         // 디폴트 위치, Seoul
         LatLng DEFAULT_LOCATION = new LatLng(37.56, 126.97);
         String markerTitle = "위치정보 가져올 수 없음";
         String markerSnippet = "위치 퍼미션과 GPS 활성 여부 확인하세요.";
 
+        nowLatitude = 37.56;
+        nowLongitude = 126.97;
+
         if (currentMarker != null) currentMarker.remove();
 
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(DEFAULT_LOCATION);
-        markerOptions.title(markerTitle);
-        markerOptions.snippet(markerSnippet);
+//        markerOptions.title(markerTitle);
+//        markerOptions.snippet(markerSnippet);
         markerOptions.draggable(true);
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
         currentMarker = mMap.addMarker(markerOptions);
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(DEFAULT_LOCATION);
         mMap.moveCamera(cameraUpdate);
+
+        main_addr.setText(markerTitle);
     }
 
     // 여기부터는 런타임 퍼미션 처리를 위한 메서드들
     private boolean checkPermission() {
+        Log.d(TAG, "checkPermission");
+
         int hasFineLocationPermission = ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION);
         int hasCoarseLocationPermission = ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION);
 
@@ -391,6 +559,8 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Activi
     // ActivityCompat.requestPermissions를 사용한 퍼미션 요청의 결과를 리턴받는 메서드
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        Log.d(TAG, "onRequestPermissionsResult");
+
         if (requestCode == PERMISSIONS_REQUEST_CODE && grantResults.length == REQUIRED_PERMISSIONS.length) {
             // 요청 코드가 PERMISSIONS_REQUEST_CODE이고, 요청한 퍼미션 개수만큼 수신되었다면
             boolean check_result = true;
@@ -433,6 +603,8 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Activi
 
     // 여기부터는 GPS 활성화를 위한 메서드들
     private void showDialogForLocationServiceSetting() {
+        Log.d(TAG, "showDialogForLocationServiceSetting");
+
 //        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("위치 서비스 비활성화");
@@ -457,6 +629,8 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Activi
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        Log.d(TAG, "onActivityResult");
 
         switch (requestCode) {
             case GPS_ENABLE_REQUEST_CODE:
